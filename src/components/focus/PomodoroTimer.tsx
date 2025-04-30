@@ -16,6 +16,7 @@ const PomodoroTimer: React.FC = () => {
     status,
     sessionsCompleted,
     settings,
+    timeLeft,
     startTimer,
     pauseTimer,
     resumeTimer,
@@ -40,13 +41,6 @@ const PomodoroTimer: React.FC = () => {
     
     return ((totalSeconds - timeLeft) / totalSeconds) * 100;
   };
-
-  // Extrair do hook para uso local
-  const timeLeft = mode === 'focus' 
-    ? settings.focusDuration * 60 - (formattedTime().split(':')[0] * 60 + formattedTime().split(':')[1] * 1)
-    : mode === 'shortBreak'
-    ? settings.shortBreakDuration * 60 - (formattedTime().split(':')[0] * 60 + formattedTime().split(':')[1] * 1)
-    : settings.longBreakDuration * 60 - (formattedTime().split(':')[0] * 60 + formattedTime().split(':')[1] * 1);
 
   return (
     <Card className="w-full max-w-md mx-auto">
