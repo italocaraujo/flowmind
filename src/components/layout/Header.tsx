@@ -11,7 +11,7 @@ const Header: React.FC = () => {
   return (
     <header className="w-full bg-white border-b border-border sticky top-0 z-10">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        <Link to="/" className="flex items-center space-x-2">
+        <Link to="/dashboard" className="flex items-center space-x-2">
           <div className="h-8 w-8 rounded-md bg-flowmind-600 flex items-center justify-center">
             <span className="text-white font-bold">F</span>
           </div>

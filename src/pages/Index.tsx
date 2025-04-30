@@ -1,17 +1,17 @@
 
-import { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
-import Dashboard from './Dashboard';
 
 const Index = () => {
-  // Redirecionar para o dashboard quando autenticado
+  // Verificar autenticação
   const user = localStorage.getItem('flowmind-user');
   
+  // Redirecionar com base na autenticação
   if (!user) {
     return <Navigate to="/login" replace />;
   }
   
-  return <Dashboard />;
+  // Se autenticado, redireciona para o dashboard
+  return <Navigate to="/dashboard" replace />;
 };
 
 export default Index;

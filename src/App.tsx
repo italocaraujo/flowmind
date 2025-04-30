@@ -12,6 +12,7 @@ import ProfilePage from "./pages/ProfilePage";
 import SettingsPage from "./pages/SettingsPage";
 import LoginPage from "./pages/LoginPage";
 import NotFound from "./pages/NotFound";
+import Index from "./pages/Index";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +47,10 @@ const App = () => (
           <Route path="/login" element={<LoginPage />} />
           <Route 
             path="/" 
+            element={<Index />} 
+          />
+          <Route 
+            path="/dashboard" 
             element={
               <ProtectedRoute>
                 <Dashboard />
