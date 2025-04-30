@@ -5,6 +5,7 @@ import { CalendarCheck, Moon, Settings, Sun, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTheme } from '@/hooks/use-theme';
+import FocusModeButton from './FocusModeButton';
 
 const Header: React.FC = () => {
   const isMobile = useIsMobile();
@@ -23,6 +24,7 @@ const Header: React.FC = () => {
         </Link>
 
         <div className="flex items-center space-x-2">
+          <FocusModeButton />
           <Button variant="ghost" size="icon" onClick={toggleTheme}>
             {theme === 'dark' ? (
               <Sun className="h-5 w-5 text-muted-foreground" />

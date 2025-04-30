@@ -1,189 +1,87 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Layout from '@/components/layout/Layout';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { useToast } from '@/components/ui/use-toast';
-import { useNavigate } from 'react-router-dom';
-import { Moon, Sun } from 'lucide-react';
-import { useTheme } from '@/hooks/use-theme';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useTheme } from '@/hooks/use-theme';
+import PomodoroSettings from '@/components/settings/PomodoroSettings';
+import { Button } from '@/components/ui/button';
+import { toast } from '@/components/ui/sonner';
 
-const SettingsPage = () => {
-  const { toast } = useToast();
-  const navigate = useNavigate();
+const SettingsPage: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
-  const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail] = useState('');
   
-  useEffect(() => {
-    // Carregar dados do usuário do localStorage
-    const userDataStr = localStorage.getItem('flowmind-user');
-    if (userDataStr) {
-      try {
-        const userData = JSON.parse(userDataStr);
-        setUserName(userData.name || '');
-        setUserEmail(userData.email || '');
-      } catch (error) {
-        console.error('Erro ao carregar dados do usuário:', error);
-      }
-    }
-  }, []);
-  
-  const handleUpdateProfile = () => {
-    // Atualizar dados no localStorage
-    const userDataStr = localStorage.getItem('flowmind-user');
-    if (userDataStr) {
-      try {
-        const userData = JSON.parse(userDataStr);
-        const updatedUser = { ...userData, name: userName };
-        localStorage.setItem('flowmind-user', JSON.stringify(updatedUser));
-        
-        toast({
-          title: "Perfil atualizado",
-          description: "Suas informações foram atualizadas com sucesso.",
-        });
-      } catch (error) {
-        console.error('Erro ao atualizar dados do usuário:', error);
-        toast({
-          title: "Erro ao atualizar",
-          description: "Não foi possível atualizar suas informações.",
-          variant: "destructive",
-        });
-      }
-    }
-  };
-  
-  const handleClearData = () => {
-    if (confirm("Tem certeza que deseja apagar todos seus dados? Esta ação não pode ser desfeita.")) {
-      // Limpar dados do localStorage, mas manter o usuário logado
-      localStorage.removeItem('flowmind-tasks');
-      localStorage.removeItem('flowmind-checkins');
-      
-      toast({
-        title: "Dados apagados",
-        description: "Todos os seus dados de tarefas e check-ins foram removidos.",
-      });
-      
-      // Redirecionar para a página inicial
-      navigate('/');
-    }
-  };
-  
-  const handleLogout = () => {
-    // Remover dados do usuário para "deslogar"
-    localStorage.removeItem('flowmind-user');
-    navigate('/login');
+  // Função para simular reset da conta
+  const handleResetAccount = () => {
+    toast.success("Configurações redefinidas", {
+      description: "Todas as suas configurações foram restauradas para o padrão."
+    });
   };
 
   return (
     <Layout>
-      <div className="space-y-6">
-        <h1 className="text-2xl font-semibold text-foreground">Configurações</h1>
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-2xl font-semibold text-flowmind-900 dark:text-flowmind-100">Configurações</h1>
+          <p className="text-muted-foreground mt-1">
+            Personalize o FlowMind de acordo com suas preferências
+          </p>
+        </div>
         
-        <Card>
-          <CardHeader>
-            <CardTitle>Perfil</CardTitle>
-            <CardDescription>Atualize suas informações pessoais</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <label htmlFor="name" className="text-sm font-medium text-foreground">
-                Nome
-              </label>
-              <input
-                id="name"
-                type="text"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-                className="flowmind-input"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium text-foreground">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={userEmail}
-                onChange={(e) => setUserEmail(e.target.value)}
-                className="flowmind-input"
-                disabled
-              />
-              <p className="text-xs text-muted-foreground">
-                O email não pode ser alterado nesta versão do aplicativo.
-              </p>
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button 
-              onClick={handleUpdateProfile}
-              className="btn-primary"
-            >
-              Salvar alterações
-            </Button>
-          </CardFooter>
-        </Card>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Preferências</CardTitle>
-            <CardDescription>Configure aspectos do aplicativo</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                {theme === 'dark' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
-                <div>
-                  <p className="text-sm font-medium">Modo {theme === 'dark' ? 'escuro' : 'claro'}</p>
-                  <p className="text-xs text-muted-foreground">Alterna entre tema claro e escuro</p>
+        <Tabs defaultValue="general">
+          <TabsList className="w-full grid grid-cols-2 mb-6">
+            <TabsTrigger value="general">Geral</TabsTrigger>
+            <TabsTrigger value="pomodoro">Pomodoro</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="general" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Tema</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex items-center space-x-4">
+                  <Switch 
+                    id="dark-mode" 
+                    checked={theme === 'dark'}
+                    onCheckedChange={toggleTheme}
+                  />
+                  <Label htmlFor="dark-mode">Modo Escuro</Label>
                 </div>
-              </div>
-              <Switch 
-                checked={theme === 'dark'}
-                onCheckedChange={toggleTheme}
-              />
-            </div>
+              </CardContent>
+            </Card>
             
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium">Lembretes</p>
-                <p className="text-xs text-muted-foreground">Notificações para check-in diário</p>
-              </div>
-              <Button variant="outline" disabled>
-                Disponível em breve
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Dados e privacidade</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Button 
-              variant="outline" 
-              className="w-full text-amber-600 border-amber-200 hover:text-amber-700 hover:bg-amber-50"
-              onClick={handleClearData}
-            >
-              Apagar todos os dados
-            </Button>
-            
-            <Separator />
-            
-            <Button 
-              variant="outline" 
-              className="w-full text-red-600 border-red-200 hover:text-red-700 hover:bg-red-50"
-              onClick={handleLogout}
-            >
-              Sair da conta
-            </Button>
-          </CardContent>
-        </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Conta</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex flex-col gap-2">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">E-mail</p>
+                    <p>usuario@exemplo.com</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Membro desde</p>
+                    <p>Abril 2023</p>
+                  </div>
+                </div>
+                
+                <div className="pt-2">
+                  <Button variant="destructive" onClick={handleResetAccount}>
+                    Redefinir configurações
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="pomodoro">
+            <PomodoroSettings />
+          </TabsContent>
+        </Tabs>
       </div>
     </Layout>
   );
