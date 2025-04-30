@@ -6,10 +6,14 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/components/ui/use-toast';
 import { useNavigate } from 'react-router-dom';
+import { Moon, Sun } from 'lucide-react';
+import { useTheme } from '@/hooks/use-theme';
+import { Switch } from '@/components/ui/switch';
 
 const SettingsPage = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
   
@@ -76,7 +80,7 @@ const SettingsPage = () => {
   return (
     <Layout>
       <div className="space-y-6">
-        <h1 className="text-2xl font-semibold text-flowmind-900">Configurações</h1>
+        <h1 className="text-2xl font-semibold text-foreground">Configurações</h1>
         
         <Card>
           <CardHeader>
@@ -85,7 +89,7 @@ const SettingsPage = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <label htmlFor="name" className="text-sm font-medium text-gray-700">
+              <label htmlFor="name" className="text-sm font-medium text-foreground">
                 Nome
               </label>
               <input
@@ -98,7 +102,7 @@ const SettingsPage = () => {
             </div>
             
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="text-sm font-medium text-foreground">
                 Email
               </label>
               <input
@@ -131,19 +135,23 @@ const SettingsPage = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium">Modo noturno</p>
-                <p className="text-xs text-gray-500">Alterna entre tema claro e escuro</p>
+              <div className="flex items-center gap-2">
+                {theme === 'dark' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+                <div>
+                  <p className="text-sm font-medium">Modo {theme === 'dark' ? 'escuro' : 'claro'}</p>
+                  <p className="text-xs text-muted-foreground">Alterna entre tema claro e escuro</p>
+                </div>
               </div>
-              <Button variant="outline" disabled>
-                Disponível em breve
-              </Button>
+              <Switch 
+                checked={theme === 'dark'}
+                onCheckedChange={toggleTheme}
+              />
             </div>
             
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium">Lembretes</p>
-                <p className="text-xs text-gray-500">Notificações para check-in diário</p>
+                <p className="text-xs text-muted-foreground">Notificações para check-in diário</p>
               </div>
               <Button variant="outline" disabled>
                 Disponível em breve
